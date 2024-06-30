@@ -1,0 +1,118 @@
+init:
+  depends_on: None
+  description: "Distribute 4 cards (unrevealed) to each player. Organize cards in a grid"
+
+player_init:
+  depends_on: init
+  description: "See bottom 2 cards once. Do not reveal it to others"
+
+start_round:
+  depends_on: init
+  condition:
+    - "All cards are dealt"
+    - "All players are ready"
+  description: "The dealer picks a card from the pile without revealing it to others. The player may see the card once."
+
+current_player_action:
+  depends_on: start_round
+  description: "The player may choose to exchange the current card with any of their cards. Do not look at any of the other cards"
+  misc:
+    - card_rule_7_8
+    - card_rule_9_10
+    - card_rule_j_q
+    - card_rule_black_k
+
+card_rule_discard_advantage_current_player:
+  depends_on: None
+  description: "If the current player has a card which numerically matches the one they are holding (not yet revealed to other players), they may discard the card they are holding along with the card in their grid with the same numerical value."
+
+card_rule_discard:
+  depends_on: None
+  description: "If any player has a card which numerically matches the card on top of the discard pile, they may discard the card from their grid"
+  condition:
+    - "The freshly discarded card should be visible to all players"
+    - "If the freshly discarded card does not match the card on top of the discard pile, the player must pick a card from the pile and add it to their grid. The discard attempt should be cancelled. The attempted card should be made visible to all players once. Do not reveal the additional card to anyone (including the player)."
+
+card_rule_discard_other:
+  depends_on: None
+  description: "If the current player knows that someone else has a card which numerically matches the card they are holding, they may discard both of those cards together. Do not reveal the other player's card if it is not the same (instead, penalize the current player with an additional card from the pile)"
+  
+card_rule_7_8:
+  depends_on: None
+  description: "If the card is 7 or 8, the player may see any of their own cards once. Do not reveal it to others"
+
+card_rule_9_10:
+  depends_on: None
+  description: "If the card is 9 or 10, the player may see a card from another person. Do not reveal it to others"
+
+card_rule_j_q:
+  depends_on: None
+  description: "If the card is J or Q, the player may blindly exchange a card with another player. Do not reveal the cards to others"
+
+card_rule_black_k:
+  depends_on: None
+  description: "If the card is a black K, the player may see one of their cards, see any one card from another player, and exchange a card with another player if they wish to do so. Do not reveal the cards to others"
+
+ace_card_points:
+  depends_on: None
+  description: "0"
+
+one_card_points:
+  depends_on: None
+  description: "1"
+
+two_card_points:
+  depends_on: None
+  description: "2"
+
+three_card_points:
+  depends_on: None
+  description: "3"
+
+four_card_points:
+  depends_on: None
+  description: "4"
+
+five_card_points:
+  depends_on: None
+  description: "5"
+
+six_card_points:
+  depends_on: None
+  description: "6"
+
+seven_card_points:
+  depends_on: None
+  description: "7"
+
+eight_card_points:
+  depends_on: None
+  description: "8"
+
+nine_card_points:
+  depends_on: None
+  description: "9"
+
+ten_card_points:
+  depends_on: None
+  description: "10"
+
+jack_card_points:
+  depends_on: None
+  description: "11"
+
+queen_card_points:
+  depends_on: None
+  description: "12"
+
+king_black_card_points:
+  depends_on: None
+  description: "13"
+
+king_red_card_points:
+  depends_on: None
+  description: "-1"
+
+discard_pile:
+  depends_on: None
+  description: "Cards are discarded face-up. The top card is visible to all players"

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Card Game Client</title>
+</head>
+<body>
+    <h1>Client 1</h1>
+    <input type="text" id="message" placeholder="Enter message">
+    <button onclick="sendMessage()">Send</button>
+    <pre id="output"></pre>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080/ws');
+
+        ws.onopen = () => {
+            console.log('Connected to server');
+        };
+
+        ws.onmessage = (event) => {
+            const output = document.getElementById('output');
+            const msg = JSON.parse(event.data);
+            output.textContent += `\n${msg.content}`;
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const message = {
+                type: 'message',
+                content: messageInput.value
+            };
+            ws.send(JSON.stringify(message));
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>
