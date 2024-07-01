@@ -22,6 +22,10 @@ current_player_action:
     - card_rule_j_q
     - card_rule_black_k
 
+discard_pile_top:
+  depends_on: None
+  description: "The top card on the discard pile is visible to all players. The ability for that card can be used by the current player only if the card was drawn from the draw pile."
+
 card_rule_discard_advantage_current_player:
   depends_on: None
   description: "If the current player has a card which numerically matches the one they are holding (not yet revealed to other players), they may discard the card they are holding along with the card in their grid with the same numerical value."
