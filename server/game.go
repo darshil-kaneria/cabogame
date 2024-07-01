@@ -6,16 +6,22 @@ import (
 )
 
 type Game struct {
-	id      string
-	clients map[*Client]bool
-	mu      sync.Mutex
+	id       string
+	clients  map[*Client]bool
+	messages chan Message
+	mu       sync.Mutex
+}
+
+type Message struct {
+	Method string `json:"method"`
 }
 
 func NewGame(id string) *Game {
 	log.Printf("Creating new game with ID: %s", id)
 	return &Game{
-		id:      id,
-		clients: make(map[*Client]bool),
+		id:       id,
+		clients:  make(map[*Client]bool),
+		messages: make(chan Message),
 	}
 }
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
 	"log"
 	"time"
 
@@ -37,16 +37,27 @@ func (c *Client) readPump() {
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		_, msg, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("Error reading message: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		log.Printf("Received message from client: %s", string(message))
-		c.server.broadcast <- message
+		log.Printf("Received message from client: %s", string(msg))
+
+		var message Message
+		err = json.Unmarshal(msg, &message)
+		if err != nil {
+			log.Printf("Error unmarshalling message: %v", err)
+		}
+
+		switch message.Method {
+		case "create_game":
+			gameID, _ := generateGameID()
+			c.server.createGame(gameID)
+		}
+		// c.server.broadcast <- message
 	}
 }
 

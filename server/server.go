@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"log"
 	"net/http"
 	"sync"
@@ -34,6 +36,18 @@ func NewServer() *Server {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 	}
+}
+
+func generateGameID() (string, error) {
+	bytes := make([]byte, 16)
+
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+
+	gameID := hex.EncodeToString(bytes)
+
+	return gameID, nil
 }
 
 func (s *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
