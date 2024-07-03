@@ -12,8 +12,11 @@ type Game struct {
 	mu       sync.Mutex
 }
 
+type ParamsMap map[string]interface{}
+
 type Message struct {
-	Method string `json:"method"`
+	Method string    `json:"method"`
+	Params ParamsMap `json:"params"`
 }
 
 func NewGame(id string) *Game {

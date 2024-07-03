@@ -52,11 +52,6 @@ func (c *Client) readPump() {
 			log.Printf("Error unmarshalling message: %v", err)
 		}
 
-		switch message.Method {
-		case "create_game":
-			gameID, _ := generateGameID()
-			c.server.createGame(gameID)
-		}
 		// c.server.broadcast <- message
 	}
 }
@@ -102,5 +97,20 @@ func (c *Client) writePump() {
 				return
 			}
 		}
+	}
+}
+
+func (c *Client) handleReadMessages(message Message) {
+
+	switch message.Method {
+	case "create_game":
+		gameID, _ := generateGameID()
+		c.server.createGame(gameID)
+	case "join_game":
+		gameID, ok := message.Params["game_id"].(string)
+		if !ok {
+			log.Printf("Invalid game ID: %v", message.Params["game_id"])
+		}
+		c.server.joinGame(gameID, c)
 	}
 }
